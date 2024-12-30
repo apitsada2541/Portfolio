@@ -1,0 +1,157 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(car)
+```
+
+
+```{r}
+np = read.table("np.csv", header=T, na.strings=".") %>%
+ arrange(SubscriptionId, t) %>%
+ group_by(SubscriptionId) %>%
+ mutate(nextchurn = lead(churn),
+ nextprice=lead(currprice),
+ t = t)
+```
+
+```{r}
+colSums(is.na(np))
+```
+
+```{r}
+summary(np)
+```
+
+
+```{r}
+fit1 <- glm(nextchurn ~ t+trial+nextprice+regularity+intensity, binomial, np)
+
+summary(fit1)
+```
+
+```{r}
+fit2 <- glm(nextchurn ~ t+trial+nextprice+regularity, binomial, np)
+
+summary(fit2)
+```
+
+```{r}
+fit3 <- glm(nextchurn ~ t+trial+nextprice+intensity, binomial, np)
+
+summary(fit3)
+```
+
+```{r}
+# Create a new data frame by selecting specific columns
+new_np <- np %>%
+  select(nextchurn, t, trial, nextprice, regularity, intensity) %>%
+  drop_na()
+```
+
+```{r}
+cor(new_np[ , !(names(new_np) %in% "SubscriptionId")])
+```
+
+```{r}
+vif(fit1)
+```
+
+```{r}
+vif(fit2)
+```
+
+
+```{r}
+vif(fit3)
+```
+
+```{r}
+fit4 <- glm(nextchurn~t+trial+nextprice+sports1+news1+crime1+life1+obits1+business1
+ +opinion1, binomial, np)
+
+summary(fit4)
+```
+
+```{r}
+fit5 <- glm(nextchurn~t+trial+nextprice+sports1+news1+crime1+life1+obits1+business1
+ +opinion1+regularity, binomial, np)
+
+summary(fit5)
+```
+
+```{r}
+# Create a new data frame by selecting specific columns
+new_np2 <- np %>%
+  select(nextchurn,t,trial,nextprice,sports1,news1,crime1,life1,obits1,business1
+ ,opinion1,regularity) %>%
+  drop_na()
+```
+
+```{r}
+cor(new_np2[ , !(names(new_np2) %in% "SubscriptionId")])
+```
+
+
+```{r}
+vif(fit4)
+```
+
+```{r}
+vif(fit5)
+```
+
+```{r}
+fit6 <- glm(nextchurn~mobile + tablet + desktop, binomial, np)
+
+summary(fit6)
+```
+
+```{r}
+vif(fit6)
+```
+
+```{r}
+fit7 <- glm(nextchurn~mobile + tablet + desktop + sports1+news1+crime1+life1+obits1+business1
+ +opinion1 + trial + currprice, binomial, np)
+
+summary(fit7)
+```
+
+```{r}
+np_complete <- np[complete.cases(np), ]
+```
+
+
+```{r}
+x1 <- model.matrix(nextchurn~mobile + tablet + desktop + sports1+news1+crime1+life1+obits1+business1
+ +opinion1 + trial + currprice -1, np_complete)
+
+head(x1)
+```
+
+```{r}
+library(glmnet)
+```
+
+
+```{r}
+set.seed(123)
+
+fit7_l1 <- cv.glmnet(x1, np_complete$nextchurn, alpha = 1, nfolds = 5)
+```
+
+```{r}
+predict(fit7_l1$glmnet.fit, s=fit7_l1$lambda.min ,type = "coef")
+```
+
+```{r}
+
+```
+
