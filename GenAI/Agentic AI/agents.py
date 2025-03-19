@@ -100,7 +100,6 @@ def retriever_agent(state):
     state["retrieved_reviews"] = retrieved_docs
     return state
 
-# Agent 2: Filter relevant review
 def filter_agent(state):
     """Agent filters most relevant review"""
     reviews = state["retrieved_reviews"]
