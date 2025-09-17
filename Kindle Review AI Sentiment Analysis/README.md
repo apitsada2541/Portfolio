@@ -63,6 +63,8 @@ pip install langgraph
 ├── Unit_Test.py          # Unit testing for model fine-tuning
 ├── Finetune.ipynb   # Model fine-tuning notebook
 ├── Complete.ipynb    # Complete workflow demonstration
+├── Dockerfile    # Dockerfile for deploy to Docker
+├── requirements.txt    # Necessary libraries
 └── README.md             # This file
 ```
 
