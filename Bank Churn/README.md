@@ -7,6 +7,7 @@ A comprehensive machine learning project for predicting customer churn in bankin
 This project implements a bank churn prediction system using various machine learning models including Logistic Regression, Random Forest, XGBoost, LightGBM, CatBoost, and Neural Networks. The system addresses class imbalance using SMOTE and includes comprehensive feature engineering and selection techniques.
 
 ## Dataset
+Source: https://www.kaggle.com/competitions/playground-series-s4e1
 
 The dataset contains customer information including:
 - Customer demographics (Age, Gender, Geography)
